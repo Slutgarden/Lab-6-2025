@@ -7,9 +7,39 @@ public class Main {
     private static final Random random = new Random();
 
     public static void main(String[] args) {
+        expStep();
         nonThread();
         simpleThreads();
         complicatedThreads();
+    }
+
+    public static void expStep() {
+        System.out.println("\nПроверка точности интегрирования exp(x) на [0;1]");
+
+        Function exp = new Exp();
+        double left = 0.0;
+        double right = 1.0;
+
+        double exact = Math.E - 1.0;
+        System.out.println("Теоретическое значение: " + exact);
+
+        double step = 0.01;
+
+        while (true) {
+            double result = Functions.integrate(exp, left, right, step);
+            double error = Math.abs(result - exact);
+
+            System.out.println(
+                    "Шаг = " + step + " результат = " + result + " погрешность = " + error
+            );
+            if (error < 0.0000001) {
+                System.out.println(
+                        "Достаточная точность достигнута при шаге: " + step
+                );
+                break;
+            }
+            step = step / 2;
+        }
     }
 
     public static void nonThread() {
@@ -100,9 +130,9 @@ public class Main {
         try {
             Thread.sleep(50);
 
-            generator.interrupt();
-            integrator.interrupt();
-            System.out.println("Потоки прерваны после 50 мс работы");
+            //generator.interrupt();
+            //integrator.interrupt();
+            //System.out.println("Потоки прерваны после 50 мс работы");
 
             generator.join();
             integrator.join();
